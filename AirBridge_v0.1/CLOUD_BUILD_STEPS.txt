@@ -1,0 +1,91 @@
+PC Pulse v0.2 — Cloud Build Guide
+=================================
+
+GOAL
+----
+Build the native SwiftUI iPhone app using Codemagic's macOS/Xcode machines,
+even though your own computer is Windows.
+
+WHAT YOU GET
+------------
+PCPulse_unsigned.ipa
+
+That IPA is intentionally NOT signed by this workflow.
+To install it on an iPhone, sign it afterward using a valid Apple signing
+certificate/provisioning profile that you are authorized to use.
+
+STEP 1 — Upload this project to GitHub
+--------------------------------------
+Create a new GitHub repository and upload the CONTENTS of this folder so that
+the repository root contains:
+
+    codemagic.yaml
+    iPhone/
+    Windows/
+    README.txt
+
+Important: codemagic.yaml must be in the repository root.
+
+STEP 2 — Add the repository to Codemagic
+----------------------------------------
+1. Sign in to Codemagic.
+2. Choose Add application.
+3. Connect GitHub.
+4. Pick your PC Pulse repository.
+5. Choose the codemagic.yaml / YAML configuration workflow.
+
+STEP 3 — Run the build
+----------------------
+Run:
+
+    PC Pulse iOS Device Build
+
+The workflow:
+1. installs XcodeGen if needed,
+2. generates PCPulse.xcodeproj,
+3. compiles the SwiftUI app for a real iPhone (iphoneos),
+4. disables code signing,
+5. packages the resulting .app as:
+
+    PCPulse_unsigned.ipa
+
+STEP 4 — Download the IPA
+-------------------------
+When the build succeeds, open the build's Artifacts section and download:
+
+    PCPulse_unsigned.ipa
+
+STEP 5 — Sign your own app
+--------------------------
+The unsigned IPA still cannot launch on an iPhone by itself.
+
+Sign it using Apple signing credentials/provisioning that you own or are
+authorized to use. The final signed app must have entitlements/profile values
+compatible with its bundle identifier.
+
+CURRENT BUNDLE ID
+-----------------
+com.example.PCPulse
+
+You can change it inside:
+
+    iPhone/project.yml
+
+Change:
+    PRODUCT_BUNDLE_IDENTIFIER: com.example.PCPulse
+
+to a bundle ID associated with your own signing setup, for example:
+    com.yourname.PCPulse
+
+WHAT THE APP DOES
+-----------------
+- Real native SwiftUI iPhone application
+- Scan PC Pulse QR
+- CPU percentage
+- RAM percentage / usage
+- C:, D:, and other Windows drives
+- Uptime
+- PC name
+- Live refresh every 1.5 seconds
+
+The Windows server must remain running while the iPhone app is connected.
